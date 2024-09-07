@@ -1,10 +1,9 @@
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import federation from "@originjs/vite-plugin-federation";
 import { fileURLToPath, URL } from "node:url";
 
-import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
-import federation from "@originjs/vite-plugin-federation";
-
-const PORT = 8000;
+const PORT = 8002;
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -15,20 +14,20 @@ export default defineConfig({
   },
   server: {
     port: PORT,
+    cors: true,
   },
   preview: {
     port: PORT,
-    cors: true,
   },
   plugins: [
-    vue(),
+    react(),
     federation({
-      name: "container",
-      remotes: {
-        navbar: "http://localhost:8001/assets/navbar.js",
-        auth: "http://localhost:8002/assets/auth.js",
+      name: "auth",
+      filename: "auth.js",
+      exposes: {
+        './App': './src/App.jsx', // Ensure this path is correct
       },
-      shared: ["vue"],
+      shared: ["react", "react-dom"],
     }),
   ],
   resolve: {
